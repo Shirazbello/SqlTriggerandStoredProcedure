@@ -81,3 +81,20 @@ exec dbo.spPeopleGet_ByLastName 'Shiraz','Bello'
 Create Role dbStoredProcedureOnlyAccess
 --Granting Role access
 Grant execute to dbStoredProcedureOnlyAccess
+
+--DROP TABLES
+USE [CODE_WIZARD]
+GO
+DECLARE @sql NVARCHAR(MAX) = N'';
+--Dropping Multiple Tables at a Time
+SELECT @sql += '
+DROP TABLE ' 
+    + QUOTENAME(s.name)
+    + '.' + QUOTENAME(t.name) + ';'
+    FROM sys.tables AS t
+    INNER JOIN sys.schemas AS s
+    ON t.[schema_id] = s.[schema_id] 
+    WHERE t.name LIKE 'AYZ_TB%';
+
+--PRINT @sql;
+EXEC sp_executesql @sql
